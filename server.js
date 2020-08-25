@@ -38,7 +38,9 @@ socket.on('connection', (ws, req) => {
 
     });
 });
+const dotenv = require('dotenv');
+dotenv.config();
 
-server.listen(8090, () => {
-    console.log('Listening on http://localhost:8090');
+server.listen(process.env.NODE_PORT, () => {
+    console.log('Listening on https://apricot.diginet.com.vn/socket/api');
 });
