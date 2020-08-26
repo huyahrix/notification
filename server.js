@@ -18,15 +18,24 @@ initRoutes(app);
 const server = createServer(app);
 const socket = new WebSocket.Server({ server });
 
+let clietns = {}; 
 app.set('socket', socket);
+app.set('clietns', clietns);
 
 socket.on('connection', (ws, req) => {
     console.log(`new connection is established ${req.connection.remoteAddress}, number of connected clients : ${socket.clients.size}`);
-    ws.send(`new connection is established ${req.connection.remoteAddress}`);
 
-    // const sending = setInterval(() => {
-    //     ws.send(`===== socket.on('connection') => this message will be sent every 10 sec from server`, () => { });
-    // }, 10000);
+    ws.id = req.headers['sec-websocket-key']; 
+    clietns[ws.id] = ws;
+
+    ws.send(JSON.stringify({
+        code: 200,
+        message: '',
+        data: {
+            SocketID: ws.id,
+            Message: `new connection is established ${req.connection.remoteAddress}`
+        }
+    }));
 
     ws.on('message', (message) => {
         //console.log(`received: ${message} from client: ${req.connection.remoteAddress}`);

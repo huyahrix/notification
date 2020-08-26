@@ -1,0 +1,13 @@
+{
+  "apps" : [{
+    "name"        : "SOCKET-DEMO",
+    "script"      : "./server.js",
+    "watch"       : false,
+    "max_memory_restart"  : "1000M",
+    "log_date_format"     : "MM-DD HH:mm",
+    "env"                 : {
+      "NODE_PORT" : 8090,
+      "API_URL" : "http://localhost:8090"
+    }
+  }]
+}

@@ -5,7 +5,7 @@ const router = express.Router();
 const NotificationController = require('../api/controllers/NotificationController');
 
 let initRoutes = (app) => {
-    router.put('/notification/push', NotificationController.push);
+    router.put('/notification/push', NotificationController.pushAll);
     return app.use('/', router);
 };
 
