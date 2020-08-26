@@ -16,7 +16,7 @@ const NotificationController = {
                     }
                 });
             }
-            const data = require('../../data')
+            const data = require('../../data');
             sendAll(data);
             res.json({
                 code: 200,
@@ -25,7 +25,7 @@ const NotificationController = {
                     Status: 0,
                     Message: ''
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
             res.json({
@@ -35,7 +35,7 @@ const NotificationController = {
                 originalError: {
                     message: error.message
                 }
-            })
+            });
         }
     },
     pushAll: async (req, res) => {
@@ -50,7 +50,7 @@ const NotificationController = {
                     }
                 });
             }
-            const data = require('../../data')
+            const data = require('../../data');
             sendAll(data);
             res.json({
                 code: 200,
@@ -59,7 +59,7 @@ const NotificationController = {
                     Status: 0,
                     Message: ''
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
             res.json({
@@ -69,9 +69,9 @@ const NotificationController = {
                 originalError: {
                     message: error.message
                 }
-            })
+            });
         }
     },
-}
+};
 
-module.exports = NotificationController
+module.exports = NotificationController;

@@ -1,0 +1,5 @@
+assets/dependencies/**/*.js
+assets/js/*
+assets/doc/*
+views/**/*.ejs
+config/version.js

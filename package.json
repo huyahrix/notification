@@ -10,10 +10,15 @@
     "path": "^0.12.7",
     "ws": "^7.3.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.7.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "npm run test && npm run start-local",
+    "start-local": "node app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "eslint . --max-warnings=0 --report-unused-disable-directives && echo '✔  Your .js files look good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo"
   },
   "repository": {
     "type": "git",

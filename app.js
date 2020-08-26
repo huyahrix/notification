@@ -18,14 +18,14 @@ initRoutes(app);
 const server = createServer(app);
 const socket = new WebSocket.Server({ server });
 
-let clietns = {}; 
+let clietns = {};
 app.set('socket', socket);
 app.set('clietns', clietns);
 
 socket.on('connection', (ws, req) => {
     console.log(`new connection is established ${req.connection.remoteAddress}, number of connected clients : ${socket.clients.size}`);
 
-    ws.id = req.headers['sec-websocket-key']; 
+    ws.id = req.headers['sec-websocket-key'];
     clietns[ws.id] = ws;
 
     ws.send(JSON.stringify({
@@ -37,10 +37,10 @@ socket.on('connection', (ws, req) => {
         }
     }));
 
-    ws.on('message', (message) => {
-        //console.log(`received: ${message} from client: ${req.connection.remoteAddress}`);
-        //ws.send(`server receive message '${message}' from client: ` + req.connection.remoteAddress);
-    });
+    // ws.on('message', (message) => {
+    //     //console.log(`received: ${message} from client: ${req.connection.remoteAddress}`);
+    //     //ws.send(`server receive message '${message}' from client: ` + req.connection.remoteAddress);
+    // });
 
     ws.on('close', () => {
         console.log(`client disconnected socket ${req.connection.remoteAddress}, number of connected clients : ${socket.clients.size}`);
