@@ -28,6 +28,7 @@ const NotificationController = {
 
             if (clietns[notifications.to] && clietns[notifications.to].readyState === 1) {
                 clietns[notifications.to].send(JSON.stringify(notifications));
+                console.log(`===== NotificationController.push | id ${notifications.to} -> sent successful`);
                 return res.json({ code: 200, message: '', data: { Status: 0, Message: 'successful' } });
             }
             console.log(`===== NotificationController.push | id ${notifications.to} -> error : client id not found`);
