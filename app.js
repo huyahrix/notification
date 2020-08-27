@@ -35,7 +35,7 @@ socket.on('connection', (ws, req) => {
 
     ws.id = req.headers['sec-websocket-key'];
     clietns[ws.id] = ws;
-    console.log(`new connection is established ${req.connection.remoteAddress} | id: ${ws.id} | number of connected clients : ${socket.clients.size}`);
+    console.log(`===== new connection is established ${req.connection.remoteAddress} | id: ${ws.id} | number of connected clients : ${socket.clients.size}`);
 
     ws.send(JSON.stringify({
         code: 200, message: '', data: { SocketID: ws.id, Message: `new connection is established ${req.connection.remoteAddress}` }
@@ -59,7 +59,7 @@ socket.on('connection', (ws, req) => {
                 }
                 console.log(`device/del-by-token | id: ${ws.id} -> response: `, response.body);
             });
-            console.log(`client disconnected socket ${req.connection.remoteAddress}, number of connected clients : ${socket.clients.size} | clietns lenght: ${Object.keys(clietns).length} `);
+            console.log(`===== client disconnected socket ${req.connection.remoteAddress}, number of connected clients : ${socket.clients.size} | clietns lenght: ${Object.keys(clietns).length} `);
         } catch (error) {
             console.error(error);
         }
