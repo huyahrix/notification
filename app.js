@@ -1,15 +1,25 @@
 'use strict';
 
 const express = require('express');
-const path = require('path');
 const { createServer } = require('http');
 const morgan = require('morgan');
 const initRoutes = require('./config/routes.js');
-
 const WebSocket = require('ws');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
-app.use(express.static(path.join(__dirname, '/public')));
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
+// eslint-disable-next-line no-unused-vars
+app.use(function (error, req, res, next) {
+    console.error(error);
+    return res.json({ code: 'error', message: error.message, data: null, originalError: error });
+});
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
@@ -29,27 +39,17 @@ socket.on('connection', (ws, req) => {
     clietns[ws.id] = ws;
 
     ws.send(JSON.stringify({
-        code: 200,
-        message: '',
-        data: {
-            SocketID: ws.id,
-            Message: `new connection is established ${req.connection.remoteAddress}`
-        }
+        code: 200, message: '', data: { SocketID: ws.id, Message: `new connection is established ${req.connection.remoteAddress}` }
     }));
 
-    // ws.on('message', (message) => {
-    //     //console.log(`received: ${message} from client: ${req.connection.remoteAddress}`);
-    //     //ws.send(`server receive message '${message}' from client: ` + req.connection.remoteAddress);
-    // });
-
     ws.on('close', () => {
+        delete clietns[ws.id];
+        // call api delete device
+        console.log('clietns lenght: ', Object.keys(clietns).length);
         console.log(`client disconnected socket ${req.connection.remoteAddress}, number of connected clients : ${socket.clients.size}`);
-
     });
 });
-const dotenv = require('dotenv');
-dotenv.config();
 
 server.listen(process.env.NODE_PORT, () => {
-    console.log('Listening on '+ process.env.API_URL);
+    console.log('Listening on ' + process.env.API_URL);
 });
