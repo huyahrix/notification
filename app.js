@@ -56,6 +56,11 @@ socket.on('connection', (ws, req) => {
             request(options, function (error, response) {
                 if (error) {
                     console.error(`device/del-by-token | id: ${ws.id}  -> error: `, error);
+                    return;
+                }
+                if (!response.body) {
+                    console.log(`device/del-by-token | id: ${ws.id} -> response: `, typeof response.body);
+                    return;
                 }
                 console.log(`device/del-by-token | id: ${ws.id} -> response: `, response.body);
             });
@@ -67,5 +72,5 @@ socket.on('connection', (ws, req) => {
 });
 
 server.listen(process.env.NODE_PORT, () => {
-    console.log('Listening on ' + process.env.API_URL);
+    console.log('Listening on port: ' + process.env.NODE_PORT);
 });
