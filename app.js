@@ -13,6 +13,8 @@ const morgan = require('morgan');
 const initRoutes = require('./config/routes.js');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+const helmet = require('helmet');
 
 dotenv.config();
 
@@ -21,6 +23,9 @@ const app = module.exports =  express();
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+app.use(helmet());
+app.use(cors());
 
 initRoutes(app);
 
