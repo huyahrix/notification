@@ -1,3 +1,9 @@
+/**
+ * @copyright
+ * @author ngochuy
+ * @create 2020-09-05
+ * @update 2020-09-05
+ */
 'use strict';
 
 const NotificationController = {
@@ -18,7 +24,7 @@ const NotificationController = {
                     notifications = JSON.parse(params.data);
                 } catch (error) {
                     if (error) {
-                        console.error('===== NotificationController.push -> JSON.parse | error: ', error.message);
+                        console.error('===== NotificationController.push | JSON.parse -> error: ', error.message);
                     }
                 }
             }
