@@ -11,14 +11,14 @@ const axios = require('axios');
 
 const ws = (app, server) => {
 
-    app.locals.client = [];
+    app.locals.clients = [];
     const socket = new WebSocket.Server({ server });
     app.set('socket', socket);
 
     socket.on('connection', (ws, req) => {
 
         ws.id = req.headers['sec-websocket-key'];
-        app.locals.client[ws.id] = ws;
+        app.locals.clients[ws.id] = ws;
         console.log(`===== socket connected ${req.connection.remoteAddress}, id: '${ws.id}', socket.clients.size : ${socket.clients.size}`);
 
         ws.send(JSON.stringify({
@@ -27,7 +27,7 @@ const ws = (app, server) => {
 
         ws.on('close', () => {
 
-            delete app.locals.client[ws.id];
+            delete app.locals.clients[ws.id];
 
             const data = JSON.stringify({ tokenDevice: ws.id });
 
@@ -46,10 +46,9 @@ const ws = (app, server) => {
                 })
                 .catch(function (error) {
                     console.error(`===== device/del-by-token, id: '${ws.id}' -> error: `, error);
-                    return;
                 });
 
-            console.log(`===== socket disconnected ${req.connection.remoteAddress}, socket.clients.size : ${socket.clients.size}, app.locals.client.lenght: ${Object.keys(app.locals.client).length} `);
+            console.log(`===== socket disconnected ${req.connection.remoteAddress}, socket.clients.size : ${socket.clients.size}, app.locals.client.lenght: ${Object.keys(app.locals.clients).length} `);
 
         });
     });

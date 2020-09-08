@@ -8,23 +8,23 @@
 
 const SMSController = {
     push: async (req, res) => {
-        console.log('===== WebSocketController.push =====');
-        let clietns = req.app.get('clietns');
+        console.log('===== WebSocketController.push => START =====');
+        let clients = req.app.locals.clients;
         const params = req.body;
         if (!params || !params.to) {
             return res.json({ code: 'ERR001', message: 'invalid params.', data: null });
         }
 
-        if (clietns && clietns[params.to] && clietns[params.to].readyState === 1) {
-            clietns[params.to].send(JSON.stringify(params));
-            console.log(`===== WebSocketController.push | id ${params.to} -> sent successful`);
+        if (clients && clients[params.to] && clients[params.to].readyState === 1) {
+            clients[params.to].send(JSON.stringify(params));
+            console.log(`===== WebSocketController.push | id: '${params.to}' => sent successful`);
             return res.json({ code: 200, message: '', data: { Status: 0, Message: 'successful' } });
         }
-        console.log(`===== WebSocketController.push | id ${params.to} -> error : client id not found`);
+        console.log(`===== WebSocketController.push | id: '${params.to}' => error : client id not found`);
         return res.json({ code: 200, message: '', data: { Status: 1, Message: 'client id not found' } });
     },
     pushAll: async (req, res) => {
-        console.log('===== WebSocketController.pushAll =====');
+        console.log('===== WebSocketController.pushAll => START =====');
         let socket = req.app.get('socket');
         const data = require('../services/data');
         socket.clients.forEach((client) => {
