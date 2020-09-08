@@ -11,8 +11,8 @@ const router = express.Router();
 const multer = require('multer');
 var upload = multer();
 
-const WebSocketController   = require('../api/controllers/WebSocketController');
-const SMSController         = require('../api/controllers/SMSController');
+const WebSocketController = require('../api/controllers/WebSocketController');
+const SMSController = require('../api/controllers/SMSController');
 
 const initRoutes = (app) => {
     router.put('*/socket/push', upload.array('formData'), WebSocketController.push);
