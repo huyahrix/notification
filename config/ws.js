@@ -7,7 +7,7 @@
 'use strict';
 
 const WebSocket = require('ws');
-const request = require('request');
+const axios = require('axios');
 
 const ws = (app, server) => {
 
@@ -26,37 +26,31 @@ const ws = (app, server) => {
         }));
 
         ws.on('close', () => {
-            try {
-                delete app.locals.client[ws.id];
-                const options = {
-                    'method': 'DELETE',
-                    'url': 'https://apricot.diginet.com.vn/lpt-api-dev/device/del-by-token',
-                    'headers': {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ tokenDevice: ws.id })
 
-                };
-                request(options, function (error, response) {
-                    try {
-                        if (error) {
-                            console.error(`===== device/del-by-token, id: '${ws.id}' -> error: `, error);
-                            return;
-                        }
-                        if (!response.body) {
-                            console.log(`===== device/del-by-token, id: '${ws.id}' -> response: `, typeof response.body);
-                            return;
-                        }
-                        console.log(`===== device/del-by-token, id: '${ws.id}' => response: `, JSON.parse(response.body).message);
-                    } catch (error) {
-                        console.log('===== device/del-by-token -> error: ', error);
+            delete app.locals.client[ws.id];
 
-                    }
+            const data = JSON.stringify({ tokenDevice: ws.id });
+
+            const config = {
+                method: 'delete',
+                url: 'https://apricot.diginet.com.vn/lpt-api-dev/device/del-by-token',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: data
+            };
+
+            axios(config)
+                .then(function (response) {
+                    console.log(`===== device/del-by-token, id: '${ws.id}' => response: `, JSON.stringify(response.data));
+                })
+                .catch(function (error) {
+                    console.error(`===== device/del-by-token, id: '${ws.id}' -> error: `, error);
+                    return;
                 });
-                console.log(`===== socket disconnected ${req.connection.remoteAddress}, socket.clients.size : ${socket.clients.size}, app.locals.client.lenght: ${Object.keys(app.locals.client).length} `);
-            } catch (error) {
-                console.error(error);
-            }
+
+            console.log(`===== socket disconnected ${req.connection.remoteAddress}, socket.clients.size : ${socket.clients.size}, app.locals.client.lenght: ${Object.keys(app.locals.client).length} `);
+
         });
     });
 };

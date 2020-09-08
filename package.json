@@ -1,8 +1,8 @@
 {
-  "name": "socket-api",
+  "name": "diginet-core-notify",
   "version": "1.0.0",
-  "description": "",
-  "main": "data.js",
+  "description": "DigiNet Core Notify",
+  "main": "app.js",
   "dependencies": {
     "axios": "^0.20.0",
     "body-parser": "^1.19.0",
@@ -17,8 +17,10 @@
     "ws": "^7.3.1"
   },
   "devDependencies": {
+    "bufferutil": "^4.0.1",
     "eslint": "^7.7.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "utf-8-validate": "^5.0.2"
   },
   "scripts": {
     "start": "npm run test && npm run start-local",
@@ -29,12 +31,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huyahrix/socket-api.git"
+    "url": "git@bitbucket.org:diginetvn/diginet-core-notify.git"
   },
-  "author": "",
+  "author": "ngochuy",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/huyahrix/socket-api/issues"
-  },
-  "homepage": "https://github.com/huyahrix/socket-api#readme"
+  "engines": {
+    "node": ">=8.4"
+  }
 }
