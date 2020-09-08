@@ -6,9 +6,9 @@
  */
 'use strict';
 
-const NotificationController = {
+const SMSController = {
     push: async (req, res) => {
-        console.log('===== NotificationController.push =====');
+        console.log('===== WebSocketController.push =====');
         let clietns = req.app.get('clietns');
         try {
             const params = req.body;
@@ -24,7 +24,7 @@ const NotificationController = {
                     notifications = JSON.parse(params.data);
                 } catch (error) {
                     if (error) {
-                        console.error('===== NotificationController.push | JSON.parse -> error: ', error.message);
+                        console.error('===== WebSocketController.push | JSON.parse -> error: ', error.message);
                     }
                 }
             }
@@ -34,10 +34,10 @@ const NotificationController = {
 
             if (clietns[notifications.to] && clietns[notifications.to].readyState === 1) {
                 clietns[notifications.to].send(JSON.stringify(notifications));
-                console.log(`===== NotificationController.push | id ${notifications.to} -> sent successful`);
+                console.log(`===== WebSocketController.push | id ${notifications.to} -> sent successful`);
                 return res.json({ code: 200, message: '', data: { Status: 0, Message: 'successful' } });
             }
-            console.log(`===== NotificationController.push | id ${notifications.to} -> error : client id not found`);
+            console.log(`===== WebSocketController.push | id ${notifications.to} -> error : client id not found`);
             return res.json({ code: 200, message: '', data: { Status: 1, Message: 'client id not found' } });
         } catch (error) {
             console.log(error);
@@ -45,7 +45,7 @@ const NotificationController = {
         }
     },
     pushAll: async (req, res) => {
-        console.log('===== NotificationController.pushAll =====');
+        console.log('===== WebSocketController.pushAll =====');
         try {
             console.log('===== socket.sendAll =====');
             let socket = req.app.get('socket');
@@ -63,4 +63,4 @@ const NotificationController = {
     },
 };
 
-module.exports = NotificationController;
+module.exports = SMSController;

@@ -11,6 +11,7 @@ const config = require('./config/config');
 const app = require('./config/express');
 const ws = require('./config/ws');
 
+app.set('config', config);
 const server = http.createServer(app);
 ws(app, server);
 

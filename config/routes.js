@@ -11,11 +11,14 @@ const router = express.Router();
 const multer = require('multer');
 var upload = multer();
 
-const NotificationController = require('../api/controllers/NotificationController');
+const WebSocketController   = require('../api/controllers/WebSocketController');
+const SMSController         = require('../api/controllers/SMSController');
 
 const initRoutes = (app) => {
-    router.put('*/notification/push', upload.array('formData'), NotificationController.push);
-    router.put('*/notification/push-all', NotificationController.pushAll);
+    router.put('*/socket/push', upload.array('formData'), WebSocketController.push);
+    router.put('*/socket/push-all', WebSocketController.pushAll);
+
+    router.put('*/sms/send', SMSController.send);
 
     app.use('/', router);
 };
