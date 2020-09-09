@@ -7,6 +7,27 @@
 'use strict';
 
 const SMSController = {
+    /**
+     @api {post} /socket/push   01. push notify use web socket
+     @apiName push
+     @apiDescription Author: ngochuy
+     @apiVersion 1.0.0
+     @apiGroup socket
+
+     @apiSuccessExample Success-Response
+     HTTP/1.1 200 ok
+     {
+        "code": 200,
+        "message": "",
+        "data": {
+            "Status": 0,
+            "Message": "successful"
+        }
+     }
+
+     @apiErrorExample Error-Response
+     HTTP/1.1 400 Bad request
+    */
     push: async (req, res) => {
         console.log('===== WebSocketController.push => START =====');
         let clients = req.app.locals.clients;
@@ -23,6 +44,27 @@ const SMSController = {
         console.log(`===== WebSocketController.push | id: '${params.to}' => error : client id not found`);
         return res.json({ code: 200, message: '', data: { Status: 1, Message: 'client id not found' } });
     },
+    /**
+     @api {post} /socket/push-all   02. push notify use web socket to all connections
+     @apiName push-all
+     @apiDescription Author: ngochuy
+     @apiVersion 1.0.0
+     @apiGroup socket
+
+     @apiSuccessExample Success-Response
+     HTTP/1.1 200 ok
+     {
+        "code": 200,
+        "message": "",
+        "data": {
+            "Status": 0,
+            "Message": "successful"
+        }
+     }
+
+     @apiErrorExample Error-Response
+     HTTP/1.1 400 Bad request
+    */
     pushAll: async (req, res) => {
         console.log('===== WebSocketController.pushAll => START =====');
         let socket = req.app.get('socket');

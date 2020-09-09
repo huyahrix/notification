@@ -17,8 +17,8 @@ const app = express();
 
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.static('assets'));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
-
 app.use(helmet());
 app.use(cors());
 
