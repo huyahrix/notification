@@ -56,6 +56,7 @@ const SMSService = {
                 console.error(error);
                 return;
             });
+        return;
     }
 };
 module.exports = SMSService;

@@ -13,20 +13,20 @@ const SMSController = {
         console.log('===== SMSController.send =====');
         const params = req.body;
         if (!params.phone) {
-            return res.json({ code: 'ERR001', message: 'The phone is requied. ', data: null, originalError: { message: '' } });
+            return res.json({ code: 'ERR001', message: 'The phone is requied. ', data: null });
         }
         if (!params.sms) {
-            return res.json({ code: 'ERR002', message: 'The sms is requied. ', data: null, originalError: { message: '' } });
+            return res.json({ code: 'ERR002', message: 'The sms is requied. ', data: null });
         }
         if (!params.bid) {
-            return res.json({ code: 'ERR003', message: 'The bid is requied. ', data: null, originalError: { message: '' } });
+            return res.json({ code: 'ERR003', message: 'The bid is requied. ', data: null });
         }
         let config = req.app.get('config');
 
         params.user = config.smsUser;
-        params.passwod= config.smsApiPass;
-        params.from= config.smsFrom;
-        params.json= config.smsJson;
+        params.password = config.smsApiPass;
+        params.from = config.smsFrom;
+        params.json = config.smsJson;
 
         SMSService.send(params);
         return res.json({ code: 200, message: '', data: { Status: 0, Message: 'successful' } });
