@@ -8,11 +8,18 @@
 
 const SMSController = {
     /**
-     @api {post} /socket/push   01. push notify use web socket
+     @api {put} /socket/push   01. push notify use web socket
      @apiName push
      @apiDescription Author: ngochuy
      @apiVersion 1.0.0
      @apiGroup socket
+
+     @apiParam {String}    to                   The to is required
+     @apiParam {String}    content_available    The content_available is required
+     @apiParam {String}    priority             The priority is required
+     @apiParam {String}    notification         The notification is required
+     @apiParam {String}    aps                  The aps is required
+     @apiParam {String}    data                 The data is required
 
      @apiSuccessExample Success-Response
      HTTP/1.1 200 ok
@@ -32,7 +39,7 @@ const SMSController = {
         console.log('===== WebSocketController.push => START =====');
         let clients = req.app.locals.clients;
         const params = req.body;
-        if (!params || !params.to) {
+        if (!params || !params.to || !params.content_available || !params.priority || !params.notification || !params.aps || !params.data) {
             return res.json({ code: 'ERR001', message: 'invalid params.', data: null });
         }
 
@@ -45,11 +52,18 @@ const SMSController = {
         return res.json({ code: 200, message: '', data: { Status: 1, Message: 'client id not found' } });
     },
     /**
-     @api {post} /socket/push-all   02. push notify use web socket to all connections
+     @api {put} /socket/push-all   02. push notify use web socket to all connections
      @apiName push-all
      @apiDescription Author: ngochuy
      @apiVersion 1.0.0
      @apiGroup socket
+
+     @apiParam {String}    to                   The to is required
+     @apiParam {String}    content_available    The content_available is required
+     @apiParam {String}    priority             The priority is required
+     @apiParam {String}    notification         The notification is required
+     @apiParam {String}    aps                  The aps is required
+     @apiParam {String}    data                 The data is required
 
      @apiSuccessExample Success-Response
      HTTP/1.1 200 ok
@@ -68,11 +82,16 @@ const SMSController = {
     pushAll: async (req, res) => {
         console.log('===== WebSocketController.pushAll => START =====');
         let socket = req.app.get('socket');
-        const data = require('../services/data');
+        //const data = require('../services/data');
+        const params = req.body;
+        console.log(params);
+        if (!params || !params.to || !params.content_available || !params.priority || !params.notification || !params.aps || !params.data) {
+            return res.json({ code: 'ERR001', message: 'invalid params.', data: null });
+        }
         socket.clients.forEach((client) => {
             if (client.readyState === 1) {
                 console.log('id:', `'${client.id}'`);
-                client.send(JSON.stringify(data));
+                client.send(JSON.stringify(params));
             }
         });
         res.json({ code: 200, message: '', data: { Status: 0, Message: '' } });
