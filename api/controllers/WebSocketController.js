@@ -82,9 +82,8 @@ const SMSController = {
     pushAll: async (req, res) => {
         console.log('===== WebSocketController.pushAll => START =====');
         let socket = req.app.get('socket');
-        //const data = require('../services/data');
-        const params = req.body;
-        console.log(params);
+        const data = require('../services/data');
+        const params = data;
         if (!params || !params.to || !params.content_available || !params.priority || !params.notification || !params.aps || !params.data) {
             return res.json({ code: 'ERR001', message: 'invalid params.', data: null });
         }
