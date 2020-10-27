@@ -8,7 +8,7 @@
 
 ### Installation 
 ``` 
-git clone  https://Infjnite@bitbucket.org/diginetvn/diginet-core-notify.git
+git clone  https://github.com/huyahrix/socket-api.git
 cd diginet-core-notify
 cp .env.example .env
 npm i
