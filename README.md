@@ -1,4 +1,4 @@
-## Welcome to the diginet core notify
+## Welcome to the core notify
 
 ### Pre-requisites
 * git - [Installation guide](https://www.linode.com/docs/development/version-control/how-to-install-git-on-linux-mac-and-windows/) .  
