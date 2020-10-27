@@ -15,7 +15,12 @@ const config = {
     smsApiPass: process.env.SMS_API_PASSWORD,
     smsWebPass: process.env.SMS_WEB_PASSWORD,
     smsFrom: process.env.SMS_FROM,
-    smsJson: process.env.SMS_JSON
+    smsJson: process.env.SMS_JSON,
+    mongo: {
+        host: process.env.MONGO_HOST,
+        port: process.env.MONGO_PORT,
+        database: process.env.MONGO_DATABASE
+    }
 };
 
 module.exports = config;

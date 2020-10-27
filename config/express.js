@@ -5,23 +5,58 @@
  * @update 2020-09-05
  */
 'use strict';
-
 const express = require('express');
-const morgan = require('morgan');
-const initRoutes = require('./routes.js');
+const httpError = require('http-errors');
+const routes = require('./routes.js');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const compress = require('compression');
+const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
+const morgan = require('morgan');
 
 const app = express();
 
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
+app.use(cookieParser());
+app.use(compress());
+app.use(methodOverride());
+
 app.use(express.static('assets'));
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+// secure apps by setting various HTTP headers
 app.use(helmet());
+
+// enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
-initRoutes(app);
+// API router
+app.use('/api/', routes);
 
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    const err = new httpError(404)
+    return next(err);
+});
+
+// error handler, send stacktrace only during development
+app.use((err, req, res, next) => {
+
+    // customize Joi validation errors
+    if (err.isJoi) {
+        err.message = err.details.map(e => e.message).join("; ");
+        err.status = 400;
+    }
+
+    res.status(err.status || 500).json({
+        message: err.message
+    });
+    next(err);
+});
+  
 module.exports = app;

@@ -12,14 +12,24 @@ const multer = require('multer');
 
 const WebSocketController = require('../api/controllers/WebSocketController');
 const SMSController = require('../api/controllers/SMSController');
+const userCtrl = require('../api/controllers/user.controller');
+const NotificationController = require('../api/controllers/NotificationController');
 
-const initRoutes = (app) => {
-    router.put('*/socket/push', multer().array('formData'), WebSocketController.push);
-    router.put('*/socket/push-all', multer().array('formData'), WebSocketController.pushAll);
+async function insert(req, res) {
+    let user = await userCtrl.insert(req.body);
+    res.json(user);
+  }
 
-    router.post('*/sms/send', multer().array('formData'), SMSController.send);
+/************************* socket *************************/
+router.put('*/socket/push', multer().array('formData'), WebSocketController.push);
+router.put('*/socket/push-all', multer().array('formData'), WebSocketController.pushAll);
 
-    app.use('/', router);
-};
+/************************* sms *************************/
+router.post('*/sms/send', multer().array('formData'), SMSController.send);
 
-module.exports = initRoutes;
+/************************* notification *************************/
+router.post('*/notification/add', multer().array('formData'), NotificationController.add);
+
+router.get('/user', insert);
+
+module.exports = router;
