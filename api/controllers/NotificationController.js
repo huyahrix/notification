@@ -5,7 +5,6 @@
  * @update 2020/10/27 08:48
  */
 'use strict';
-const _ = require('underscore');
 const Utils = require('../utils');
 const ErrorSystem = require('../errors/system');
 const NotificationService = require('../services/NotificationService');
@@ -34,10 +33,8 @@ module.exports = {
         if (!_.isArray(params.data) && !Utils.parseArray(params, 'data')) {
             return res.badRequest(ErrorMessage.SYSTEM_JSON_FORMAT_FAIL);
         }
-
         NotificationService.create(params.data);
-        //return res.ok({ Status: 0, Message: 'success' });
-        return res.json({ code: 200, message: '', data: { Status: 0, Message: 'successful' } });
+        return res.ok({ Status: 0, Message: 'success' });
     },
 };
 

@@ -4,8 +4,7 @@
  * @create 2020/10/27
  * @update 2020/10/27
  */
-// 'use strict';
-// const PushNotiService = require('../services/PushNotiService');
+'use strict';
 const mongoose = require('mongoose');
 
 const notification = new mongoose.Schema({
@@ -62,6 +61,9 @@ const notification = new mongoose.Schema({
     type: {
         type: String
     }
-});
+}, { timestamps: true });
 
+notification.post('save', async function(doc) {
+    require('../services/NotificationService').push(doc).catch(e => console.log(e));
+});
 module.exports = mongoose.model('notification', notification);

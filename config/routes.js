@@ -18,7 +18,7 @@ const NotificationController = require('../api/controllers/NotificationControlle
 async function insert(req, res) {
     let user = await userCtrl.insert(req.body);
     res.json(user);
-  }
+}
 
 /************************* socket *************************/
 router.put('*/socket/push', multer().array('formData'), WebSocketController.push);

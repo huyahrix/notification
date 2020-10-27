@@ -33,14 +33,23 @@ app.use(helmet());
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
+app.use(function (req, res, next) {
+    res.ok = (data) => {
+        return res.json({ code: 200, message: '', data: data });
+    };
+    next();
+});
+
+
 // API router
 app.use('/api/', routes);
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+global._ = require('underscore');
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    const err = new httpError(404)
+    const err = new httpError(404);
     return next(err);
 });
 
@@ -49,7 +58,7 @@ app.use((err, req, res, next) => {
 
     // customize Joi validation errors
     if (err.isJoi) {
-        err.message = err.details.map(e => e.message).join("; ");
+        err.message = err.details.map(e => e.message).join('; ');
         err.status = 400;
     }
 
@@ -58,5 +67,5 @@ app.use((err, req, res, next) => {
     });
     next(err);
 });
-  
+
 module.exports = app;

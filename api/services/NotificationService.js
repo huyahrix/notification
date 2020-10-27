@@ -1,5 +1,5 @@
 /**
- * @copyright 2020 ©DigiNet
+ * @copyright 2020 © DigiNet
  * @author ngochuy
  * @create 2020/10/27 08:48
  * @update 2020/10/27 08:48
@@ -43,11 +43,9 @@ const NotificationService = {
                             },
                         };
                         try {
-                            //await Notification.create(data).meta({ fetch: true });
-                            console.log(data);
-                            await new notification(data).save();
+                            await new notification(data).save().catch(e => console.log(e));
                         } catch (error) {
-                            sails.log.error('===== NotificationService.create -> error: ', error.message);
+                            console.log('===== NotificationService.create -> error: ', error.message);
                         }
                     }
                 }
@@ -56,7 +54,61 @@ const NotificationService = {
                 }
             }
         } else {
-            sails.log.warn('===== NotificationService.create -> {data : null}');
+            console.log('===== NotificationService.create -> {data : null}');
+        }
+    },
+    push: async (param) => {
+        console.log('===== NotificationService.push =====');
+        const device    = await Device.find({user: param.consumer, AppID: param.AppID});
+        const badge     = await NotificationService.countBadge(param.consumer, param.AppID);
+
+        if (device && device.length > 0) {
+            for (let j = 0; j < device.length; j++) {
+                const dv = device[j];
+                const data = {
+                    'to': dv.token,
+                    'content_available': true,
+                    'priority': 'high',
+                    'notification': {
+                        'badge': badge,
+                        'title': param.title,
+                        'body':  param.body,
+                        'notification_type': param.payload.type,
+                    },
+                    'aps':{
+                        'badge': badge,
+                        'title': param.title,
+                        'body':  param.body,
+                    },
+                    'data': {
+                        'badge':   badge,
+                        'title':   param.title,
+                        'titleE':  param.titleE,
+                        'body':    param.body,
+                        'bodyE':   param.bodyE,
+                        'sender':  param.sender,
+                        'consumer':param.consumer,
+                        'type':    param.type,
+                        'id':      param.id || '',
+                        'payload': {
+                            'P_form_id':        param.payload.form_id,
+                            'voucher_id':       param.payload.voucher_id,
+                            'voucher_des':      param.payload.voucher_des,
+                            'voucher_desE':     param.payload.voucher_desE,
+                            'voucher_no':       param.payload.voucher_no,
+                            'url':              param.payload.URL || param.payload.url ? param.payload.URL || param.payload.url : '',
+                            'sender_name':      param.payload.sender_name,
+                            'action':           param.payload.action,
+                        },
+                    }
+                };
+                await FirebaseService.push(data, param.AppID).catch(e => {
+                    console.log(e);
+                });
+            }
+        }
+        else {
+            console.log('===== PushNotiService.push => warn: Device not found ', `{user: ${param.consumer}, AppID: ${param.AppID}}`);
         }
     }
 };
