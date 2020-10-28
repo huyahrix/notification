@@ -12,13 +12,9 @@ const multer = require('multer');
 
 const WebSocketController = require('../api/controllers/WebSocketController');
 const SMSController = require('../api/controllers/SMSController');
-const userCtrl = require('../api/controllers/user.controller');
 const NotificationController = require('../api/controllers/NotificationController');
-
-async function insert(req, res) {
-    let user = await userCtrl.insert(req.body);
-    res.json(user);
-}
+const DeviceController = require('../api/controllers/DeviceController');
+const AppController = require('../api/controllers/AppController');
 
 /************************* socket *************************/
 router.put('*/socket/push', multer().array('formData'), WebSocketController.push);
@@ -30,6 +26,10 @@ router.post('*/sms/send', multer().array('formData'), SMSController.send);
 /************************* notification *************************/
 router.post('*/notification/add', multer().array('formData'), NotificationController.add);
 
-router.get('/user', insert);
+/************************* device *************************/
+router.post('*/device/add', multer().array('formData'), DeviceController.add);
+
+/************************* app *************************/
+router.post('*/app/add', multer().array('formData'), AppController.add);
 
 module.exports = router;

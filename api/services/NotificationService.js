@@ -6,6 +6,8 @@
  */
 'use strict';
 const notification = require('../models/notification');
+const DeviceService = require('../services/DeviceService');
+const FirebaseService = require('../services/FirebaseService');
 
 const NotificationService = {
     create: async (param) => {
@@ -59,10 +61,10 @@ const NotificationService = {
     },
     push: async (param) => {
         console.log('===== NotificationService.push =====');
-        const device    = await Device.find({user: param.consumer, AppID: param.AppID});
-        const badge     = await NotificationService.countBadge(param.consumer, param.AppID);
+        const device = await DeviceService.find({ user: param.consumer, AppID: param.AppID });
+        const badge = await NotificationService.countBadge(param.consumer, param.AppID);
 
-        if (device && device.length > 0) {
+        if (device && _.isArray(device) && device.length > 0) {
             for (let j = 0; j < device.length; j++) {
                 const dv = device[j];
                 const data = {
@@ -73,7 +75,7 @@ const NotificationService = {
                         'badge': badge,
                         'title': param.title,
                         'body':  param.body,
-                        'notification_type': param.payload.type,
+                        'notification_type': param.type,
                     },
                     'aps':{
                         'badge': badge,
@@ -103,14 +105,24 @@ const NotificationService = {
                     }
                 };
                 await FirebaseService.push(data, param.AppID).catch(e => {
-                    console.log(e);
+                    console.log('===== FirebaseService.push -> error: ', e);
                 });
             }
         }
         else {
-            console.log('===== PushNotiService.push => warn: Device not found ', `{user: ${param.consumer}, AppID: ${param.AppID}}`);
+            console.log('===== PushNotiService.push -> warn: Device not found ', `{user: '${param.consumer}', AppID: '${param.AppID}'}`);
         }
-    }
+    },
+    countBadge: async (owner, AppID) => {
+        console.log(`===== NotificationService.countBadge -> {owner: '${owner}', AppID: '${AppID}'}`);
+        let badge = await notification.countDocuments({
+            consumer: owner,
+            AppID: AppID,
+            read:'N',
+            clearBadge: 0
+        });
+        return badge;
+    },
 };
 
 module.exports = NotificationService;

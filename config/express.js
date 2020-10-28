@@ -37,6 +37,9 @@ app.use(function (req, res, next) {
     res.ok = (data) => {
         return res.json({ code: 200, message: '', data: data });
     };
+    res.badRequest = (data) => {
+        return res.json(Object.assign({ code: 'ERROR', message: '' }, data, { data: null }));
+    };
     next();
 });
 
@@ -62,9 +65,7 @@ app.use((err, req, res, next) => {
         err.status = 400;
     }
 
-    res.status(err.status || 500).json({
-        message: err.message
-    });
+    res.status(err.status || 500).json({code: err.code || 'ERROR', message: err.message, data: null});
     next(err);
 });
 

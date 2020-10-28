@@ -4,22 +4,38 @@
  * @create 2020-09-05
  * @update 2020-09-05
  */
-
+const Joi = require('joi');
 require('dotenv').config();
+
+// define validation for all the env vars
+const envSchema = Joi.object({
+    NODE_ENV: Joi.string().valid(...['development', 'production', 'test', 'provision']).default('development'),
+    SERVER_PORT: Joi.number().default(8080),
+    JWT_SECRET: Joi.string().required().description('JWT Secret required to sign'),
+    MONGO_HOST: Joi.string().required().description('Mongo DB host url'),
+    MONGO_PORT: Joi.number().default(27017)
+}).unknown()
+    .required();
+
+const { error, value } = envSchema.validate(process.env);
+if (error) {
+    throw new Error(`Config validation error: ${error.message}`);
+}
+
 const config = {
-    env: process.env.NODE_ENV,
-    port: process.env.NODE_PORT,
-    apiURL: process.env.API_URL,
-    secret: process.env.SECRET,
-    smsUser: process.env.SMS_USER,
-    smsApiPass: process.env.SMS_API_PASSWORD,
-    smsWebPass: process.env.SMS_WEB_PASSWORD,
-    smsFrom: process.env.SMS_FROM,
-    smsJson: process.env.SMS_JSON,
+    env: value.NODE_ENV,
+    port: value.NODE_PORT,
+    apiURL: value.API_URL,
+    secret: value.SECRET,
+    smsUser: value.SMS_USER,
+    smsApiPass: value.SMS_API_PASSWORD,
+    smsWebPass: value.SMS_WEB_PASSWORD,
+    smsFrom: value.SMS_FROM,
+    smsJson: value.SMS_JSON,
     mongo: {
-        host: process.env.MONGO_HOST,
-        port: process.env.MONGO_PORT,
-        database: process.env.MONGO_DATABASE
+        host: value.MONGO_HOST,
+        port: value.MONGO_PORT,
+        database: value.MONGO_DATABASE
     }
 };
 

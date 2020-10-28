@@ -42,9 +42,11 @@ const notification = new mongoose.Schema({
     },
     read: {
         type: String,
+        default: 'N',
     },
     AppID: {
         type: String,
+        required: true,
     },
     createdAt: {
         type: Date
@@ -57,6 +59,7 @@ const notification = new mongoose.Schema({
     },
     clearBadge: {
         type: Number,
+        default: 0
     },
     type: {
         type: String
