@@ -49,6 +49,7 @@ app.use('/api/', routes);
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 global._ = require('underscore');
+global.config = require('./config');
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

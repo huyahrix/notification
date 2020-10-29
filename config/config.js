@@ -26,7 +26,7 @@ const config = {
     env: value.NODE_ENV,
     port: value.NODE_PORT,
     apiURL: value.API_URL,
-    secret: value.SECRET,
+    secret: value.JWT_SECRET,
     smsUser: value.SMS_USER,
     smsApiPass: value.SMS_API_PASSWORD,
     smsWebPass: value.SMS_WEB_PASSWORD,

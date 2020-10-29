@@ -66,7 +66,8 @@ const notification = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-notification.post('save', async function(doc) {
+notification.post('save', async function (doc, next) {
     require('../services/NotificationService').push(doc).catch(e => console.log(e));
+    next();
 });
 module.exports = mongoose.model('notification', notification);

@@ -7,12 +7,10 @@
 'use strict';
 
 const http = require('http');
-const config = require('./config/config');
 const app = require('./config/express');
 require('./config/mongoose');
 const ws = require('./config/ws');
 
-app.set('config', config);
 const server = http.createServer(app);
 ws(app, server);
 
