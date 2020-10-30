@@ -15,6 +15,7 @@ const methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const winston = require('./winston');
 
 const app = express();
 
@@ -43,15 +44,22 @@ app.use(function (req, res, next) {
     next();
 });
 
+// streamed with ist and utc
+app.use(morgan('combined', { stream: winston.stream }));
+
+// Two log files are created in logs folder-->
+// 1.app.log with all the recent logs and,
+// 2.application- date.log with date wise logs of application
 
 // API router
 app.use('/api/', routes);
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 global._ = require('underscore');
 global.config = require('./config');
+global.winston = winston;
+global.util = require('util');
 
-// catch 404 and forward to error handler
+//catch 404 and forward to error handler
 app.use((req, res, next) => {
     const err = new httpError(404);
     return next(err);
@@ -67,7 +75,7 @@ app.use((err, req, res, next) => {
     }
 
     res.status(err.status || 500).json({code: err.code || 'ERROR', message: err.message, data: null});
-    next(err);
+    next();
 });
 
 module.exports = app;

@@ -8,6 +8,7 @@
 
 const WebSocket = require('ws');
 const axios = require('axios');
+const winston = require('winston/lib/winston/config');
 
 const ws = (app, server) => {
 
@@ -19,7 +20,7 @@ const ws = (app, server) => {
 
         ws.id = req.headers['sec-websocket-key'];
         app.locals.clients[ws.id] = ws;
-        console.log(`===== socket connected ${req.connection.remoteAddress}, id: '${ws.id}', socket.clients.size : ${socket.clients.size}`);
+        winston.info(`===== socket connected ${req.connection.remoteAddress}, id: '${ws.id}', socket.clients.size : ${socket.clients.size}`);
 
         ws.send(JSON.stringify({
             code: 200, message: '', data: { SocketID: ws.id, Message: `new connection is established ${req.connection.remoteAddress}` }
@@ -42,13 +43,13 @@ const ws = (app, server) => {
 
             axios(config)
                 .then(function (response) {
-                    console.log(`===== device/del-by-token, id: '${ws.id}' => response: `, JSON.stringify(response.data));
+                    winston.info(util.format(`===== device/del-by-token, id: '${ws.id}' => response: `, JSON.stringify(response.data)));
                 })
-                .catch(function (error) {
-                    console.error(`===== device/del-by-token, id: '${ws.id}' -> error: `, error);
+                .catch(function (e) {
+                    winston.error(util.format(`===== device/del-by-token, id: '${ws.id}' -> error: `, e));
                 });
 
-            console.log(`===== socket disconnected ${req.connection.remoteAddress}, socket.clients.size : ${socket.clients.size}, app.locals.client.lenght: ${Object.keys(app.locals.clients).length} `);
+            winston.info(`===== socket disconnected ${req.connection.remoteAddress}, {socket.clients.size : ${socket.clients.size}, app.locals.client.lenght: ${Object.keys(app.locals.clients).length} `);
 
         });
     });

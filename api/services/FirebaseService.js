@@ -12,11 +12,11 @@ const fcmHost = 'https://fcm.googleapis.com/fcm/send';
 const FirebaseService = {
     /* one time one request */
     push: async (data, AppID) => {
-        console.log('===== FirebaseService.push =====');
+        winston.info('===== FirebaseService.push =====');
         const authFCM = await app.find({ code: AppID });
 
         if (!authFCM || !authFCM[0] || !authFCM[0].authFCM) {
-            console.log('===== FirebaseService.push -> warn: AuthFCM is undefined ', `{code: '${AppID}'}`);
+            winston.warn(`===== FirebaseService.push -> warn: AuthFCM is undefined {code: '${AppID}'}`);
             return false;
         }
         const headers = {
@@ -33,10 +33,10 @@ const FirebaseService = {
 
         axios(config)
             .then((response) => {
-                console.log(JSON.stringify(response.data));
+                winston.info(JSON.stringify(response.data));
             })
             .catch((error) => {
-                console.log('===== FirebaseService.push -> error', error);
+                winston.error(util.format('===== FirebaseService.push -> error', error));
             });
     }
 };

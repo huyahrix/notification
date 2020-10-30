@@ -9,18 +9,18 @@ const device = require('../models/device');
 
 const DeviceService = {
     add: async (options) => {
-        console.log('===== DeviceService.add -> options: =====');
+        winston.info('===== DeviceService.add -> options: =====');
         return await new device(options).save().catch((e) => {
-            console.log('===== DeviceService.add -> error: ', e.message);
+            winston.error(util.format('===== DeviceService.add -> error: ', e.message));
             return { code: e.code || '', message: e.message };
         });
     },
     delete: async (options) => {
-        console.log('===== DeviceService.delete -> options: =====');
+        winston.info('===== DeviceService.delete -> options: =====');
         return new Promise(async (resolve, reject) => {
             device.deleteMany(options, (e) => {
                 if (e) {
-                    console.log(e.message);
+                    winston.info(util.format('===== DeviceService.delete -> error', e.message));
                     return reject({ code: e.code || '', message: e.message });
                 }
                 return resolve('success');
@@ -28,9 +28,9 @@ const DeviceService = {
         });
     },
     find: async (options) => {
-        console.log('===== DeviceService.find -> options: =====');
+        winston.info('===== DeviceService.find -> options: =====');
         return await device.find(options).catch(e => {
-            console.log('===== DeviceService.add -> error: ', e.message);
+            winston.error(util.format('===== DeviceService.add -> error: ', e));
             return { code: e.code || '', message: e.message };
         });
     },

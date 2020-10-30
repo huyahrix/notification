@@ -14,19 +14,19 @@ module.exports = async (req, res, next) => {
     // Check token required
     const token = req.headers.token || null;
     if (!token || token.length < 30) {
-        console.log('===== policies.tokenAuth -> warn: ', ErrorSystem.SYSTEM_TOKEN_REQUIRE.message);
+        winston.warn(util.format('===== policies.tokenAuth -> warn: ', ErrorSystem.SYSTEM_TOKEN_REQUIRE.message));
         return res.badRequest(ErrorSystem.SYSTEM_TOKEN_REQUIRE);
     }
     // Check token validated
     const authData = Utils.decryptJWT(token);
     if (!authData || (!authData.id && !authData._id)) {
-        console.log('===== policies.tokenAuth -> warn: ', ErrorSystem.SYSTEM_TOKEN_WRONG.message);
+        winston.warn(util.format('===== policies.tokenAuth -> warn: ', ErrorSystem.SYSTEM_TOKEN_WRONG.message));
         return res.badRequest(ErrorSystem.SYSTEM_TOKEN_WRONG);
     }
     // Check expired time
     const expiredAt = moment().diff(authData.expiredAt);
     if (expiredAt >= 0) {
-        console.log('===== policies.tokenAuth -> warn: ', ErrorSystem.SYSTEM_TOKEN_EXPIRED.message);
+        winston.warn(util.format('===== policies.tokenAuth -> warn: ', ErrorSystem.SYSTEM_TOKEN_EXPIRED.message));
         DeviceService.del({ user: authData.user.UserAccount, authToken: token });
         return res.badRequest(ErrorSystem.SYSTEM_TOKEN_EXPIRED);
     }

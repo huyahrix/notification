@@ -32,8 +32,8 @@ const encryptJWT = (tokenData, expiry) => {
 const decryptJWT = (tokenData) => {
     try {
         return jwt.verify(tokenData, config.secret + '@!2#');
-    } catch(error) {
-        console.log('Token Error: ' + JSON.stringify(error));
+    } catch (e) {
+        winston.error(util.format('Token Error: ' + e));
     }
 };
 

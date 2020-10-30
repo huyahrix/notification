@@ -12,7 +12,6 @@
  * https://portal.vietguys.biz/downloads/VIETGUYS_MESSENGER_USER_GUIDE_EN_2019.pdf
  * http://sms.vietguys.biz/resource/api/HTTPGET_VIETGUYS_SMS_API_VN.pdf
  */
-
 const axios = require('axios');
 
 const SMSService = {
@@ -21,7 +20,7 @@ const SMSService = {
     * @param {params}
     */
     send: async (params) => {
-        console.log('===== SMSService.send =====');
+        winston.info('===== SMSService.send =====');
         let data = {};
         try {
             data = JSON.stringify({
@@ -33,8 +32,8 @@ const SMSService = {
                 'bid': params.bid,
                 'json': params.json,
             });
-        } catch (error) {
-            console.error(error);
+        } catch (e) {
+            winston.error(util.format('===== SMSService.send =====', e));
             return;
         }
 
@@ -49,11 +48,11 @@ const SMSService = {
 
         axios(config)
             .then(function (response) {
-                console.log(JSON.stringify(response.data));
+                winston.info(JSON.stringify(response.data));
                 return;
             })
-            .catch(function (error) {
-                console.error(error);
+            .catch(function (e) {
+                winston.error(util.format('===== SMSService.send', e));
                 return;
             });
         return;

@@ -15,7 +15,7 @@ const server = http.createServer(app);
 ws(app, server);
 
 server.listen(config.port, () => {
-    console.info(`Listening on port ${config.port} (${config.env})`);
+    winston.info(`Listening on port ${config.port} (${config.env})`);
 });
 
 module.exports = server;

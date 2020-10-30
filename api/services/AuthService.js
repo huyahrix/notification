@@ -1,17 +1,17 @@
 /**
- * @copyright 2019 © DigiNet
- * @author rocachien
- * @create 2019/04/24 17:24
- * @update 2019/04/24 17:24
+ * @copyright 2020 © DigiNet
+ * @author ngochuy
+ * @create 2020/10/30
+ * @update 2020/10/30
  */
 'use strict';
 const auth = require('../models/auth');
 
 const AuthService = {
     add: async (options) => {
-        console.log('===== AuthService.add -> options: =====');
+        winston.info('===== AuthService.add -> options: =====');
         return await new auth(options).save().catch((e) => {
-            console.log('===== AuthService.add -> error: ', e.message);
+            winston.error(util.format('===== AuthService.add -> error: ', e));
             return { code: e.code || '', message: e.message };
         });
     },

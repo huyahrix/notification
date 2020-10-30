@@ -63,7 +63,7 @@ const DeviceController = {
       {"code": 'DV008', "message": 'The device is exited'}
     */
     add: async (req, res) => {
-        console.log('===== DeviceController.add => START =====');
+        winston.info('===== DeviceController.add => START =====');
         const params = req.body;
         // const auth = Utils.auth(req);
         // params.user = auth && auth.user && auth.user.UserAccount ? auth.user.UserAccount : null;

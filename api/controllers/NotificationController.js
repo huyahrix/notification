@@ -8,7 +8,6 @@
 const Utils = require('../utils');
 const ErrorSystem = require('../errors/system');
 const NotificationService = require('../services/NotificationService');
-
 const ErrorMessage = Object.assign({
     NOTIFICATION_ADD_FAIL:              { code: 'NT001', message: 'Do not add successful' },
     NOTIFICATION_EDIT_FAIL:             { code: 'NT002', message: 'Do not edit successful' },
@@ -22,9 +21,9 @@ const ErrorMessage = Object.assign({
     NOTIFICATION_TYPE_REQUIRED:         { code: 'NT008', message: 'The notification type is required' },
 }, ErrorSystem);
 
-module.exports = {
+const NotificationController = {
     add: async (req, res) => {
-        console.log('===== NotificationController.add => START =====');
+        winston.info('===== NotificationController.add => START =====');
         const params = req.body;
 
         if (!params.data) {
@@ -37,5 +36,6 @@ module.exports = {
         return res.ok({ Status: 0, Message: 'success' });
     },
 };
+module.exports = NotificationController;
 
 

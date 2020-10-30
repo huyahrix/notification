@@ -11,7 +11,7 @@ const FirebaseService = require('../services/FirebaseService');
 
 const NotificationService = {
     create: async (param) => {
-        console.log('===== NotificationService.create =====');
+        winston.info('===== NotificationService.create =====');
 
         if (param && param.length > 0) {
             let consumer = [];
@@ -44,11 +44,7 @@ const NotificationService = {
                                 action:         pr.P_action,
                             },
                         };
-                        try {
-                            await new notification(data).save().catch(e => console.log(e));
-                        } catch (error) {
-                            console.log('===== NotificationService.create -> error: ', error.message);
-                        }
+                        await new notification(data).save().catch(e => winston.error(util.format('===== notification.save -> error: ', e)));
                     }
                 }
                 if (i < param.length - 1) {
@@ -56,11 +52,11 @@ const NotificationService = {
                 }
             }
         } else {
-            console.log('===== NotificationService.create -> {data : null}');
+            winston.warn('===== NotificationService.create -> {data : null}');
         }
     },
     push: async (param) => {
-        console.log('===== NotificationService.push =====');
+        winston.info('===== NotificationService.push =====');
         const device = await DeviceService.find({ user: param.consumer, AppID: param.AppID });
         const badge = await NotificationService.countBadge(param.consumer, param.AppID);
 
@@ -105,16 +101,16 @@ const NotificationService = {
                     }
                 };
                 await FirebaseService.push(data, param.AppID).catch(e => {
-                    console.log('===== FirebaseService.push -> error: ', e);
+                    winston.error(util.format('===== FirebaseService.push -> error: ', e));
                 });
             }
         }
         else {
-            console.log('===== PushNotiService.push -> warn: Device not found ', `{user: '${param.consumer}', AppID: '${param.AppID}'}`);
+            winston.warn(`===== PushNotiService.push -> warn: Device not found {user: '${param.consumer}', AppID: '${param.AppID}'}`);
         }
     },
     countBadge: async (owner, AppID) => {
-        console.log(`===== NotificationService.countBadge -> {owner: '${owner}', AppID: '${AppID}'}`);
+        winston.info(`===== NotificationService.countBadge -> {owner: '${owner}', AppID: '${AppID}'}`);
         let badge = await notification.countDocuments({
             consumer: owner,
             AppID: AppID,

@@ -5,7 +5,6 @@
  * @update 2020-09-09
  */
 'use strict';
-
 const SMSService = require('../services/SMSService');
 
 const SMSController = {
@@ -38,8 +37,9 @@ const SMSController = {
      { "code": 'ERR003', "message": 'The bid is requied. ', "data": null }
     */
     send: async (req, res) => {
-        console.log('===== SMSController.send =====');
+        winston.info('===== SMSController.send =====');
         const params = req.body;
+
         if (!params.phone) {
             return res.json({ code: 'ERR001', message: 'The phone is requied. ', data: null });
         }
@@ -49,7 +49,6 @@ const SMSController = {
         if (!params.bid) {
             return res.json({ code: 'ERR003', message: 'The bid is requied. ', data: null });
         }
-        let config = req.app.get('config');
 
         params.user = config.smsUser;
         params.password = config.smsApiPass;

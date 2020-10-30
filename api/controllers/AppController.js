@@ -1,14 +1,13 @@
 /**
- * @copyright 2018 © DigiNet
- * @author kimlong
- * @create 2018/11/19 11:40
- * @update 2018/11/19 11:40
+ * @copyright 2020 © DigiNet
+ * @author ngochuy
+ * @create 2020/10/30
+ * @update 2020/10/30
  */
 'use strict';
 const Utils = require('../utils');
 const ErrorSystem = require('../errors/system');
 const AppService = require('../services/AppService');
-
 const ErrorMessage = Object.assign({
     APP_ADD_FAIL:               {code: 'AP001', message: 'Do not add successful'},
     APP_EDIT_FAIL:              {code: 'AP002', message: 'Do not edit successful'},
@@ -20,7 +19,7 @@ const ErrorMessage = Object.assign({
     APP_CODE_EXITED:            {code: 'AP007', message: 'The code is exited'},
 }, ErrorSystem);
 
-module.exports = {
+const AppController = {
     /**
      @api {put} /app/add 01. Add an app
      @apiName add
@@ -68,7 +67,7 @@ module.exports = {
      {code: 'SYS009', message: 'The data is not in list'}
     */
     add: async (req, res) => {
-        console.log('===== AppController.add => START =====');
+        winston.info('===== AppController.add => START =====');
         const params = req.body;
 
         if (!params.code) {
@@ -103,3 +102,4 @@ module.exports = {
         return res.ok(result);
     },
 };
+module.exports = AppController;

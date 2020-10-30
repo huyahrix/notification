@@ -58,7 +58,7 @@ module.exports = {
      {code: 'AU006', message: 'The user id much a number'}
     */
     getToken: async(req, res) => {
-        console.log('===== AuthController.getToken =====');
+        winston.info('===== AuthController.getToken =====');
 
         const expire = moment().add(10, 'days').toDate(); /* 10d */
         const tkData = {expiredAt: expire};
@@ -104,7 +104,7 @@ module.exports = {
      {code: 'AU009', message: 'The authentication id is required'}
     */
     check: async (req, res) => {
-        console.log('===== AuthController.check =====');
+        winston.info('===== AuthController.check =====');
         const params = req.body;
 
         if (!params.token || params.token.length < 30) {
@@ -120,7 +120,7 @@ module.exports = {
             const token = Utils.encryptJWT(authData);
             return res.ok({auth: authData, token: token });
         }
-        console.log('===== AuthController.check -> warn: ', '{code: SYS003, message: Authentication token are not matching}');
+        winston.warn('===== AuthController.check -> {code: SYS003, message: Authentication token are not matching}');
         return res.badRequest(ErrorSystem.SYSTEM_TOKEN_WRONG);
     },
 };
