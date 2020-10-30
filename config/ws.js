@@ -8,7 +8,6 @@
 
 const WebSocket = require('ws');
 const axios = require('axios');
-const winston = require('winston/lib/winston/config');
 
 const ws = (app, server) => {
 

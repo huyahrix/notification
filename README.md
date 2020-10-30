@@ -12,7 +12,7 @@ Requires [Node.js](https://nodejs.org/) v8.4+ to run.
 
 Install the dependencies and start the server.
 ``` 
-git clone  https://github.com/huyahrix/socket-api.git
+git clone https://Infjnite@bitbucket.org/diginetvn/diginet-core-notify.git
 cd diginet-core-notify
 cp .env.example .env
 npm i

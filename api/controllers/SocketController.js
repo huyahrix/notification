@@ -91,7 +91,7 @@ const SocketController = {
 
         socket.clients.forEach((client) => {
             if (client.readyState === 1) {
-                winston.info('id:', `'${client.id}'`);
+                winston.info(`id: '${client.id}'`);
                 client.send(JSON.stringify(params));
             }
         });
