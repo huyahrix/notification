@@ -1,21 +1,24 @@
 {
   "apps" : [{
-    "name"        : "SOCKET-DEMO",
-    "script"      : "./app.js",
-    "watch"       : false,
+    "name"    : "DIGINET-CORE-NOTIFY",
+    "script"  : "./app.js",
+    "watch"   : false,
     "max_memory_restart"  : "1000M",
     "log_date_format"     : "MM-DD HH:mm",
-    "env"                 : {
-      "NODE_PORT" : 3000,
-      "NODE_ENV"  : "development",
-      "API_URL"   : "http://apricot.diginet.com.vn:3000",
-      "SECRET"    : "",
-      "SMS_USER"    : "diginet",
-      "SMS_API_PASSWORD"    : "2v3ds",
-      "SMS_WEB_PASSWORD"    : "Vietguys@123",
-      "SMS_FROM"    : "TEST-DS",
-      "SMS_UNICODE"    : 8,
-      "SMS_JSON"    : 1,
+    "env" : {
+      "NODE_PORT"         : 3000,
+      "NODE_ENV"          : "development",
+      "API_URL"           : "http://apricot.diginet.com.vn:3000",
+      "SECRET"            : "",
+      "SMS_USER"          : "diginet",
+      "SMS_API_PASSWORD"  : "2v3ds",
+      "SMS_WEB_PASSWORD"  : "Vietguys@123",
+      "SMS_FROM"          : "TEST-DS",
+      "SMS_UNICODE"       : 8,
+      "SMS_JSON"          : 1,
+      "MONGO_HOST"        : "mongodb://127.0.0.1",
+      "MONGO_PORT"        : 27017,
+      "MONGO_DATABASE"    : "notification"
     }
   }]
 }
