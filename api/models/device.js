@@ -32,4 +32,14 @@ const device = new mongoose.Schema({
     },
 }, { timestamps: true });
 
+device.method('transform', function () {
+    const obj = this.toObject();
+
+    //Rename fields
+    obj.id = obj._id;
+    delete obj._id;
+
+    return obj;
+});
+
 module.exports = mongoose.model('device', device);

@@ -26,7 +26,7 @@ router.put('*/auth/check', multer().array('formData'), policies.secretAuth, Auth
 router.post('*/app/add', multer().array('formData'), policies.tokenAuth, AppController.add);
 
 /************************* device *************************/
-router.post('*/device/add', multer().array('formData'), policies.tokenAuth, DeviceController.add);
+router.post('*/device/add', multer().array('formData'), DeviceController.add);
 
 /************************* notification *************************/
 router.post('*/notification/add', multer().array('formData'), policies.tokenAuth, NotificationController.add);

@@ -10,29 +10,42 @@ const device = require('../models/device');
 const DeviceService = {
     add: async (options) => {
         winston.info('===== DeviceService.add -> options: =====');
-        return await new device(options).save().catch((e) => {
-            winston.error(util.format('===== DeviceService.add -> error: ', e.message));
-            return { code: e.code || '', message: e.message };
-        });
+
+        return await new device(options).save()
+            .then(result => {
+                return result.transform();
+            })
+            .catch((err) => {
+                winston.error(util.format('DeviceService.add -> error: ', err));
+                return new mongooseError(err);
+            });
     },
     delete: async (options) => {
         winston.info('===== DeviceService.delete -> options: =====');
+
         return new Promise(async (resolve, reject) => {
-            device.deleteMany(options, (e) => {
-                if (e) {
-                    winston.info(util.format('===== DeviceService.delete -> error', e.message));
-                    return reject({ code: e.code || '', message: e.message });
+            device.deleteMany(options, (err) => {
+                if (err) {
+                    winston.error(util.format('DeviceService.delete -> error', err));
+                    return reject(err);
                 }
                 return resolve('success');
             });
+        }).catch(error => {
+            return new mongooseError(error);
         });
     },
     find: async (options) => {
         winston.info('===== DeviceService.find -> options: =====');
-        return await device.find(options).catch(e => {
-            winston.error(util.format('===== DeviceService.add -> error: ', e));
-            return { code: e.code || '', message: e.message };
-        });
+
+        return await device.find(options)
+            .then(result => {
+                return result.transform();
+            })
+            .catch(err => {
+                winston.error(util.format('DeviceService.find -> error: ', err));
+                return new mongooseError(err);
+            });
     },
 };
 

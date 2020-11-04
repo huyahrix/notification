@@ -5,6 +5,7 @@
  * @update 2020/10/28
  */
 'use strict';
+const Joi = require('joi');
 const ErrorSystem = require('../errors/system');
 const DeviceService = require('../services/DeviceService');
 const ErrorMessage = Object.assign({
@@ -22,18 +23,19 @@ const ErrorMessage = Object.assign({
 
 const DeviceController = {
     /**
-      @api {put} /device/add 01. Create device
+      @api {put} /device/add 01. create device
       @apiName add
       @apiVersion 1.0.0
-      @apiGroup Device
+      @apiGroup device
 
       @apiHeader {String} token String of token is required.
 
       @apiParam {String} os              The os of device is required. E.g: ['WEB', 'IOS', 'ANDROID']. Default: ''
       @apiParam {String} md              The model of os is required. E.g: ['Opera', 'Chrome', 'Safari', 'Firefox', 'MSIE', 'unknown']. Default: unknown
       @apiParam {String} token           The token of device is required.
-      @apiParam {String} AppID           The AppID is options. Default : '',
-      @apiParam {String} language        The language is required.
+      @apiParam {String} AppID           The AppID is required.
+      @apiParam {String} UserID          The UserID is required.
+      @apiParam {String} language        The language is option. Default : '84'
 
       @apiSuccessExample {json} Success-Response:
       HTTP/1.1 200 OK
@@ -65,27 +67,22 @@ const DeviceController = {
     add: async (req, res) => {
         winston.info('===== DeviceController.add => START =====');
         const params = req.body;
-        // const auth = Utils.auth(req);
-        // params.user = auth && auth.user && auth.user.UserAccount ? auth.user.UserAccount : null;
         params.user = params.UserID;
 
-        if (!params.md) {
-            return res.badRequest(ErrorMessage.DEVICE_MODEL_REQUIRED);
-        }
-        if (!params.token) {
-            return res.badRequest(ErrorMessage.DEVICE_TOKEN_REQUIRED);
-        }
-        if (!params.language) {
-            return res.badRequest(ErrorMessage.DEVICE_LANGUAGE_REQUIRED);
-        }
-        if (['WEB', 'IOS', 'ANDROID', 'WINDOWS'].indexOf(params.os) === -1) {
-            return res.badRequest(ErrorMessage.SYSTEM_ENUM_VALUE_FAIL);
-        }
-        if (['Opera', 'Chrome', 'Safari', 'Firefox', 'MSIE', 'unknown'].indexOf(params.md) === -1) {
-            return res.badRequest(ErrorMessage.SYSTEM_ENUM_VALUE_FAIL);
-        }
+        const Schema = Joi.object({
+            md: Joi.string().valid('Opera', 'Chrome', 'Safari', 'Firefox', 'MSIE', 'unknown').required(),
+            token: Joi.string().required(),
+            language: Joi.string().valid('01', '84').required(),
+            os: Joi.string().valid('WEB', 'IOS', 'ANDROID', 'WINDOWS').required(),
+            AppID: Joi.string().required(),
+            UserID: Joi.string().required(),
+        }).unknown(true);
 
-        //const param = { user: params.user, md: params.md, os: params.os, token: params.token, language: params.language, AppID: params.AppID, authToken: req.headers.token };
+        const { error } = Schema.validate(params);
+        if (error) {
+            winston.warn('===== DeviceController.add -> warn: ', error.message );
+            return res.badRequest(new validationError(error));
+        }
 
         await DeviceService.delete({ user: params.user, os: params.os });
 
@@ -97,6 +94,82 @@ const DeviceController = {
             return res.badRequest(result);
         }
         return res.ok(result);
+    },
+    /**
+     @api {put} /device/edit 02. edit a device
+     @apiName edit
+     @apiVersion 1.0.0
+     @apiGroup device
+
+     @apiHeader {String} token String of token is required.
+
+     @apiParam {String} id              The ID of Device is required.
+     @apiParam {String} md              The type of os is required.
+     @apiParam {String} os              The os of device is required. E.g: ['WEB', 'IOS', 'ANDROID'].
+     @apiParam {String} token           The token of device is required.
+     @apiParam {String} AppID           The AppID is required.
+     @apiParam {String} UserID          The UserID is required.
+
+     @apiSuccessExample {json} Success-Response:
+     HTTP/1.1 200 OK
+     {}
+
+     @apiErrorExample Error-Response:
+     HTTP/1.1 500 Internal Server Error
+     {'code': 'SYS001','message': 'Internal Server Error!'}
+     HTTP/1.1 400 Bad Request
+     {'code': 'DV006','message': 'ID is required'}
+     {'code': 'DV004','message': 'Not found any Device'}
+     {'code': 'DV002','message': 'Do not edit successful'}
+    */
+    edit: (req, res) => {
+        sails.log.info('===== DeviceController.edit => START =====');
+        const params = req.allParams();
+
+        if (!params.id) {
+            return res.badRequest(ErrorMessage.DEVICE_ID_REQUIRED);
+        }
+
+        const Schema = Joi.object({
+            md: Joi.string().valid('Opera', 'Chrome', 'Safari', 'Firefox', 'MSIE', 'unknown'),
+            token: Joi.string(),
+            language: Joi.string().valid('01', '84'),
+            os: Joi.string().valid('WEB', 'IOS', 'ANDROID', 'WINDOWS'),
+            AppID: Joi.string(),
+            UserID: Joi.string(),
+        }).unknown(true);
+
+        const { error } = Schema.validate(params);
+        if (error) {
+            winston.warn('===== DeviceController.add -> warn: ', error.message );
+            return res.badRequest({ code: 'ValidationError', message: error.message });
+        }
+
+        DeviceService.get({ id: params.id }, (error, device) => {
+            if (error) {
+                // Tracking
+                TrackingService.trackingSystem('DeviceController', 'ERROR', error);
+                return res.badRequest(error);
+            }
+
+            if (!device || !device.id) {
+                return res.badRequest(ErrorMessage.DEVICE_NOT_FOUND);
+            }
+
+            device.os = params.os ? params.os : device.os;
+            device.token = params.token ? params.token : device.token;
+
+            DeviceService.edit({ id: params.id }, device, (e) => {
+                if (e) {
+                    sails.log.warn('===== Edit device error: ' + JSON.stringify(e));
+                    // Tracking
+                    TrackingService.trackingSystem('DeviceController', 'ERROR', e);
+                    return res.badRequest(e);
+                }
+
+                return res.ok(device);
+            });
+        });
     },
 };
 module.exports = DeviceController;

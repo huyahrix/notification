@@ -39,6 +39,9 @@ app.use(function (req, res, next) {
         return res.json({ code: 200, message: '', data: data });
     };
     res.badRequest = (data) => {
+        if (data instanceof Error) {
+            return res.json(Object.assign({ code: data.code || 'ERROR', message: data.message || '' }, { data: null }));
+        }
         return res.json(Object.assign({ code: 'ERROR', message: '' }, data, { data: null }));
     };
     next();
@@ -58,6 +61,7 @@ global._ = require('underscore');
 global.config = require('./config');
 global.winston = winston;
 global.util = require('util');
+require('../api/errors');
 
 //catch 404 and forward to error handler
 app.use((req, res, next) => {
